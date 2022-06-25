@@ -22,7 +22,7 @@ class Cellular {
         return `Tempo di chiamata: ${this._timeHrs}h ${this._timeMin}min ${this._timeSec}sec`;
     }
     // Metodo per caricare saldo (dollari) disponibile:
-    creditValue(value) { this._credit = this._credit + value; }
+    chargeCredit(value) { this._credit = this._credit + value; }
     // Metodo per gestire logica intervallo chiamata:
     setCall() {
         // il timer incrementa, i soldi decrementano
@@ -36,7 +36,7 @@ class Cellular {
                     alert(this.infoCall() + 'Credito esaurito. Effettuare una ricarica.');
                 }
             }
-            console.log(this.infoCredit());
+            console.log(this.infoCredit()); // qui stampero' a video
         }
     }
     // Metodo per inizializzare intervallo chiamata:
@@ -66,34 +66,50 @@ class Phone extends Cellular {
     }
 }
 class Smartphone extends Cellular {
-    constructor(model, dataGb, dataMb) {
+    constructor(model) {
         super(model);
-        /* ---- Propr. definite nel constructor (Dati Fissi) */
+        /* ---- Propr. non definite nel constructor (Dati Mutevoli) */
         this._dataGb = 0; // Data disponibile (GB)
         this._dataMb = 0; // Data disponibile (MB)
-        /* ---- Propr. non definite nel constructor (Dati Mutevoli) */
         this._spaceGb = 0; // Spazio memoria in utilizzo GB (intervallo)
         this._spaceMb = 0; // Spazio memoria in utilizzo MB (intervallo)
         this._internetInit = false; // inizializzatore timer internet
-        this._dataGb = dataGb;
-        this._dataMb = dataMb;
     }
-    get dataGb() { return this._dataGb; }
-    get dataMb() { return this._dataMb; }
     infoData() {
-        return `Data Residuo: ${this.dataGb}GB ${this.dataMb}MB - Tempo di navigazione: ${this._spaceGb}GB ${this._spaceMb}MB`;
+        return `Data Residuo: ${this._dataGb}GB ${this._dataMb}MB`;
     }
+    /*     infoNavigation(): string {
+            return `Data Utilizzato: ${this._spaceGb}GB ${this._spaceMb}MB`
+        } */
     // Metodo per caricare data (GB) disponibili:
-    chargeData(value) { this._dataGb = this._dataGb + value; }
+    chargeData(value) {
+        if (this._credit <= 9) {
+            alert('Hai bisogno di almeno 10$ per ricarica i tuoi GB (10$ -> 1GB)');
+        }
+        else if (this._credit >= 10) {
+            this._dataGb += value;
+            this._credit -= value * 10;
+            alert('Hai caricato con successo' + value + 'GB');
+        }
+    }
     // Metodo per gestire logica intervallo internet:
     setInternet() {
         if (this._internetInit === true) {
-            this._spaceMb++;
-            if (this._spaceMb >= 1000) {
-                this._spaceMb = 0;
-                this._spaceGb++;
-            }
-            console.log(this);
+            this._dataMb--;
+            console.log(this.infoData());
+            /*             if(this._spaceMb >= 1000) {
+                            this._spaceMb = 0;
+                            this._spaceGb++;
+                        } */
+            // console.log(this);
+            /*            this._spaceMb++;
+                       console.log('Navigazione partita');
+           
+                       if(this._spaceMb >= 1000) {
+                           this._spaceMb = 0;
+                           this._spaceGb++;
+                       }
+                       console.log(this); */
         }
     }
     // Metodo per inizializzare intervallo internet:
@@ -103,8 +119,8 @@ class Smartphone extends Cellular {
     }
 }
 let Nokia = new Phone('Nokia 3330');
-let Iphone = new Smartphone('Iphone 4s', 100, 0);
-let Samsung = new Smartphone('Samsung A50', 25, 0);
+let Iphone = new Smartphone('Iphone 4s');
+let Samsung = new Smartphone('Samsung A50');
 function commitCharge() {
     if (CONT !== null) {
         /* Nokia.creditValue(100); */
