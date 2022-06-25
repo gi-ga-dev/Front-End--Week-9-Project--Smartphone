@@ -38,17 +38,11 @@ abstract class Cellular {
         if (this._callInit === true) {
             this._timeSec++;
             if(this._timeSec >= 1) {
-                // se callInit true sec salgono
-                // se i sec sono sup./= 1 credito -0.20
-                // se credito 0 stop chiamata, stampa durata e alert
-
                 this._credit -= 0.20;
-                if(this._credit === 0) {
-
+                if(this._credit <= 0) {
                     // fermo chiamata, stampo la durata ed alert
                     this.stopCall();
-                    console.log(this.infoCall());
-                    alert('Credito Esaurito');
+                    alert(this.infoCall()+'Credito esaurito. Effettuare una ricarica.');
                 }
             }
             console.log(this.infoCredit());
@@ -59,16 +53,19 @@ abstract class Cellular {
     startCall(): void { 
         this.stopCall();
         this._callInit = true;
-        this._credit -= 0.20;  // scatto alla risposta
 
         // se si utilizza fat arrow function il this mantiene lo scope della classe padre
-        // senza si riferisce all'istanza che ha chiamato l'oggetto (startCall)
-        this._timer = setInterval( () => this.setCall(), 1000 ) 
+        // senza si riferisce all'istanza che ha chiamato l'oggetto (startCall) 
+        if(this._credit >= 0.20) { 
+            this._credit -= 0.20;  // scatto alla risposta
+            this._timer = setInterval( () => this.setCall(), 1000 ) // la call parte solo se ci sono + di 0.20
+        } else if(this._credit === 0) { alert('Credito esaurito. Effettuare una ricarica.') }
     }
 
     stopCall(): void {
         this._callInit = false;
-        clearInterval(this._timer)
+        clearInterval(this._timer);
+        this.infoCall();
     }
 
 
