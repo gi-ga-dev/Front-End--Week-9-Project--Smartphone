@@ -5,6 +5,7 @@ class Cellular {
         this._timeHrs = 0; // tempi di chiamata (ore)
         this._timeMin = 0; // tempi di chiamata (minuti)
         this._timeSec = 0; // tempi di chiamata (secondi)
+        this.timer = false; // var timer chiamata
         this._model = model;
         this._creditDoll = creditDoll;
         this._creditCent = creditCent;
@@ -19,8 +20,27 @@ class Cellular {
     get timeMin() { return this._timeMin; }
     get timeSec() { return this._timeSec; }
     creditValue(value) { this._creditDoll = this._creditDoll + value; }
-    setCall() { this._creditDoll++; }
-    startCall() { setInterval(this.setCall, 1000); }
+    setCall() {
+        if (this.timer === true) {
+            this._timeSec++;
+            if (this._timeSec >= 60) {
+                // qui scala 0.20cent ogni 60sec
+                this._timeSec = 0;
+                this._timeMin++;
+                if (this._timeMin >= 60) {
+                    this._timeMin = 0;
+                    this._timeHrs++;
+                }
+            }
+            console.log(this);
+        }
+    }
+    startCall() {
+        this.timer = true;
+        // se si utilizza fat arrow function il this mantiene lo scope della classe padre
+        // senza si riferisce all'istanza che ha chiamato l'oggetto (startCall)
+        setInterval(() => this.setCall(), 1000);
+    }
 }
 Cellular.calls = 0; // contatore n. chiamate effettuate
 class Phone extends Cellular {

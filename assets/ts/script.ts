@@ -9,7 +9,7 @@ abstract class Cellular {
     private _timeHrs: number = 0; // tempi di chiamata (ore)
     private _timeMin: number = 0; // tempi di chiamata (minuti)
     private _timeSec: number = 0; // tempi di chiamata (secondi)
-    static timer: number;         // var timer chiamata
+    private timer: boolean = false;         // var timer chiamata
     static calls: number = 0;     // contatore n. chiamate effettuate
     
     constructor(model: string, creditDoll: number, creditCent: number, timeHrs: number, timeMin: number, timeSec: number) {
@@ -31,36 +31,30 @@ abstract class Cellular {
     abstract infoCredit(): string;
        
     creditValue(value: number): void { this._creditDoll = this._creditDoll + value; }
-    setCall(): void { this._creditDoll++; }
-    startCall(): void { setInterval(this.setCall, 1000); }
-
-/*     setCall(): void {
-        // gli serve l'oggetto per inizializzare il timer
-        // devo inserire tutti gli oggetti che avranno un timer
-        
-        // qui scala 0.20cent scatto alla risposta
-        Nokia._timeSec++;
-        console.log(Nokia);
-        if(Nokia._timeSec >= 60) {
-            // qui scala 0.20cent ogni 60sec
-            Nokia._timeSec = 0;
-            Nokia._timeMin++;
-            if(Nokia._timeMin >= 60) {
-                Nokia._timeMin = 0;
-                Nokia._timeHrs++;
+    
+    setCall(): void {
+        if (this.timer === true) {
+            this._timeSec++;
+            if(this._timeSec >= 60) {
+                // qui scala 0.20cent ogni 60sec
+                this._timeSec = 0;
+                this._timeMin++;
+                if(this._timeMin >= 60) {
+                    this._timeMin = 0;
+                    this._timeHrs++;
+                }
             }
+            console.log(this);
         }
     }
     
-    startCall(): void { Cellular.timer = setInterval(this.setCall, 1000); }
+    startCall(): void { 
+        this.timer = true;
+        // se si utilizza fat arrow function il this mantiene lo scope della classe padre
+        // senza si riferisce all'istanza che ha chiamato l'oggetto (startCall)
+        setInterval( () => this.setCall(), 1000) 
+    }
 
-    stopCall(): void { 
-        clearInterval(Cellular.timer);
-        //clear di tutti i timer
-        Nokia._timeHrs = 0;
-        Nokia._timeMin = 0;
-        Nokia._timeSec = 0;
-    } */
 
 /*     resetCalls(): number {} */
 
