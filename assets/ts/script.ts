@@ -35,9 +35,9 @@ abstract class Cellular {
     // Metodo per caricare saldo (dollari) disponibile (minimo 5$):
     chargeCredit(value: number): void { 
         if(value <= 4) {
-            alert('Devi ricaricare un minimo di 5$');
+            alert(`Devi ricaricare un minimo di 5$`);
         } else if (value >= 5) { 
-            alert('Hai caricato con successo ' + value + '$!');
+            alert(`Hai caricato con successo ${value}$!`);
             this._credit = this._credit + value; 
         }
     }
@@ -47,12 +47,13 @@ abstract class Cellular {
         // il timer incrementa, i soldi decrementano
         if (this._callInit === true) {
             this._timeSec++;
-            if(this._timeSec >= 60) {  // ***TEST AREA***
+            if(this._timeSec >= 60) {  // (60) ***TEST AREA***
                 this._credit -= 0.20;
                 if(this._credit <= 0.20) {
                     // fermo chiamata, stampo la durata ed alert
                     this.stopCall();
-                    alert(this.infoCall()+' Credito esaurito. Effettuare una ricarica.');
+                    this._callsCount -= 1;
+                    alert(`${this.infoCall()} Credito esaurito. Effettuare una ricarica.`);
                 }
             }
             console.log(this.infoCredit()); // qui stampero' a video
@@ -72,14 +73,12 @@ abstract class Cellular {
             // senza si riferisce all'istanza che ha chiamato l'oggetto (startCall) 
             this._timer = setInterval( () => this.setCall(), 1000 ) 
         } else if(this._credit <= 0.20) { 
-            this._callsCount += 0.5;
-            alert('Credito esaurito. Effettuare una ricarica.') 
+            alert(`Credito esaurito. Effettuare una ricarica.`) 
         }
     }
 
     stopCall(): void {
-        // incremento il contatore chiamate (0.5 perche' stopCall viene chiamata 2 volte)
-        this._callsCount += 0.5;
+        this._callsCount += 1;
         this._callInit = false;
         clearInterval(this._timer);
     }
@@ -116,17 +115,17 @@ class Smartphone extends Cellular {
 
     // Metodo per caricare data (GB) disponibili:
     chargeData(value: number): void { 
-        if(this._credit <= 9) {          // ***TEST AREA***
+        if(this._credit <= 4) {         // (4) ***TEST AREA***
 
-            alert('Hai bisogno di almeno 10$ per ricarica i tuoi GB (10$ -> 1GB)');
-        } else if (this._credit >= 10) { // ***TEST AREA***
+            alert(`Hai bisogno di almeno 5$ per ricarica il tuo Data (5$ -> 500MB - 10$ -> 1GB)`);
+        } else if (this._credit >= 5) { // (5) ***TEST AREA***
 
             // il valore dell'input equivale ai GB da agg.
             this._data += value;        
             // il credito che scalo e' il valore input*10
 
-            this._credit -= value*10; // ***TEST AREA***
-            alert('Hai caricato con successo ' + value +'GB!');
+            this._credit -= value*10; // (10) ***TEST AREA***
+            alert(`Hai caricato con successo ' ${value.toFixed(3).slice(0,1)}GB ${value.toFixed(3).slice(2,5)}MB!`);
         }
     }
 
@@ -136,7 +135,8 @@ class Smartphone extends Cellular {
             // se il data e' 1MB data esaurito, stop Internet e stampa
             if(this._data <= 0.001) {
                 this.stopInternet();
-                alert(this.infoData()+' Data esaurito. Effettuare una ricarica.')
+                this._internetCount -= 1;
+                alert(`${this.infoData()} Data esaurito. Effettuare una ricarica.`);
             } else if (this._data >= 0.001) { // finche data e' >= 1MB scala il data
                 this._data -= 0.001;          // consumo al sec 0.001 (1MB)
                 console.log(this.infoData()); // qui stampero' a video
@@ -152,7 +152,7 @@ class Smartphone extends Cellular {
     }
 
     stopInternet(): void {
-        this._internetCount += 0.5;
+        this._internetCount += 1;
         this._internetInit = false;
         clearInterval(this._space);
     }
