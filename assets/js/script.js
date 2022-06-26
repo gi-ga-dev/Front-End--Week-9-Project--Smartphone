@@ -7,7 +7,8 @@ class Cellular {
         this._timeMin = 0; // tempi di chiamata corrente minuti (intervallo)
         this._timeSec = 0; // tempi di chiamata corrente secondi (intervallo)
         this._callInit = false; // inizializzatore timer chiamata
-        this._timer = 0; // 
+        this._timer = 0; // prop. da attribuire all'intervallo call
+        this._callsCount = 0; // contatore n. chiamate effettuate
         this._model = model;
     }
     // utilizzare i get solo per definire propr. fisse che avranno tutti gli oggetti creati
@@ -21,19 +22,30 @@ class Cellular {
     infoCall() {
         return `Tempo di chiamata: ${this._timeHrs}h ${this._timeMin}min ${this._timeSec}sec`;
     }
-    // Metodo per caricare saldo (dollari) disponibile:
-    chargeCredit(value) { this._credit = this._credit + value; }
+    infoCalls() {
+        return `Numero chiamate effettuate: ${this._callsCount}`;
+    }
+    // Metodo per caricare saldo (dollari) disponibile (minimo 5$):
+    chargeCredit(value) {
+        if (value <= 4) {
+            alert('Devi ricaricare un minimo di 5$');
+        }
+        else if (value >= 5) {
+            alert('Hai caricato con successo ' + value + '$!');
+            this._credit = this._credit + value;
+        }
+    }
     // Metodo per gestire logica intervallo chiamata:
     setCall() {
         // il timer incrementa, i soldi decrementano
         if (this._callInit === true) {
             this._timeSec++;
-            if (this._timeSec >= 1) {
+            if (this._timeSec >= 60) { // ***TEST AREA***
                 this._credit -= 0.20;
-                if (this._credit <= 0) {
+                if (this._credit <= 0.20) {
                     // fermo chiamata, stampo la durata ed alert
                     this.stopCall();
-                    alert(this.infoCall() + 'Credito esaurito. Effettuare una ricarica.');
+                    alert(this.infoCall() + ' Credito esaurito. Effettuare una ricarica.');
                 }
             }
             console.log(this.infoCredit()); // qui stampero' a video
@@ -41,25 +53,31 @@ class Cellular {
     }
     // Metodo per inizializzare intervallo chiamata:
     startCall() {
+        // stop all'intervallo precedente
         this.stopCall();
         this._callInit = true;
-        // se si utilizza fat arrow function il this mantiene lo scope della classe padre
-        // senza si riferisce all'istanza che ha chiamato l'oggetto (startCall) 
+        // la call parte solo se ci sono + di 0.40 (0.20 scatto 0.20 60sec call)
         if (this._credit >= 0.20) {
             this._credit -= 0.20; // scatto alla risposta
-            this._timer = setInterval(() => this.setCall(), 1000); // la call parte solo se ci sono + di 0.20
+            // con fat arrow function il this mantiene lo scope della classe padre
+            // senza si riferisce all'istanza che ha chiamato l'oggetto (startCall) 
+            this._timer = setInterval(() => this.setCall(), 1000);
         }
-        else if (this._credit === 0) {
+        else if (this._credit <= 0.20) {
+            this._callsCount += 0.5;
             alert('Credito esaurito. Effettuare una ricarica.');
         }
     }
     stopCall() {
+        // incremento il contatore chiamate (0.5 perche' stopCall viene chiamata 2 volte)
+        this._callsCount += 0.5;
         this._callInit = false;
         clearInterval(this._timer);
-        this.infoCall();
+    }
+    resetCalls() {
+        this._callsCount = 0;
     }
 }
-Cellular.calls = 0; // contatore n. chiamate effettuate
 class Phone extends Cellular {
     constructor(model) {
         super(model);
@@ -69,53 +87,57 @@ class Smartphone extends Cellular {
     constructor(model) {
         super(model);
         /* ---- Propr. non definite nel constructor (Dati Mutevoli) */
-        this._dataGb = 0; // Data disponibile (GB)
-        this._dataMb = 0; // Data disponibile (MB)
-        this._spaceGb = 0; // Spazio memoria in utilizzo GB (intervallo)
-        this._spaceMb = 0; // Spazio memoria in utilizzo MB (intervallo)
+        this._data = 0; // Data disponibile (GB/MB)
         this._internetInit = false; // inizializzatore timer internet
+        this._space = 0; // prop. da attribuire all'intervallo internet
+        this._internetCount = 0; // n. navigazioni internet
     }
     infoData() {
-        return `Data Residuo: ${this._dataGb}GB ${this._dataMb}MB`;
+        return `Data Residuo: ${this._data.toFixed(3).slice(0, 1)}GB ${this._data.toFixed(3).slice(2, 5)}MB`;
     }
-    /*     infoNavigation(): string {
-            return `Data Utilizzato: ${this._spaceGb}GB ${this._spaceMb}MB`
-        } */
+    infoInternet() {
+        return `Numero navigazioni effettuate: ${this._internetCount}`;
+    }
     // Metodo per caricare data (GB) disponibili:
     chargeData(value) {
-        if (this._credit <= 9) {
+        if (this._credit <= 9) { // ***TEST AREA***
             alert('Hai bisogno di almeno 10$ per ricarica i tuoi GB (10$ -> 1GB)');
         }
-        else if (this._credit >= 10) {
-            this._dataGb += value;
-            this._credit -= value * 10;
-            alert('Hai caricato con successo' + value + 'GB');
+        else if (this._credit >= 10) { // ***TEST AREA***
+            // il valore dell'input equivale ai GB da agg.
+            this._data += value;
+            // il credito che scalo e' il valore input*10
+            this._credit -= value * 10; // ***TEST AREA***
+            alert('Hai caricato con successo ' + value + 'GB!');
         }
     }
     // Metodo per gestire logica intervallo internet:
     setInternet() {
         if (this._internetInit === true) {
-            this._dataMb--;
-            console.log(this.infoData());
-            /*             if(this._spaceMb >= 1000) {
-                            this._spaceMb = 0;
-                            this._spaceGb++;
-                        } */
-            // console.log(this);
-            /*            this._spaceMb++;
-                       console.log('Navigazione partita');
-           
-                       if(this._spaceMb >= 1000) {
-                           this._spaceMb = 0;
-                           this._spaceGb++;
-                       }
-                       console.log(this); */
+            // se il data e' 1MB data esaurito, stop Internet e stampa
+            if (this._data <= 0.001) {
+                this.stopInternet();
+                alert(this.infoData() + ' Data esaurito. Effettuare una ricarica.');
+            }
+            else if (this._data >= 0.001) { // finche data e' >= 1MB scala il data
+                this._data -= 0.001; // consumo al sec 0.001 (1MB)
+                console.log(this.infoData()); // qui stampero' a video
+            }
         }
     }
     // Metodo per inizializzare intervallo internet:
     startInternet() {
+        this.stopInternet();
         this._internetInit = true;
-        setInterval(() => this.setInternet(), 1000);
+        this._space = setInterval(() => this.setInternet(), 1000);
+    }
+    stopInternet() {
+        this._internetCount += 0.5;
+        this._internetInit = false;
+        clearInterval(this._space);
+    }
+    resetInternet() {
+        this._internetCount = 0;
     }
 }
 let Nokia = new Phone('Nokia 3330');
