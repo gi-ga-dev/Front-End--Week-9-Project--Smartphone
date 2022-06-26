@@ -48,21 +48,23 @@ document.addEventListener('DOMContentLoaded', () => {
             btnStopCall.id = 'btnStopCall';
             btnStopCall.innerHTML = 'Stop Chiamata';
             btnStopCall.style.display = 'none';
-            divSelect.append(divDisplay, inpRicCredit, btnRicCredit, btnStartCall, btnStopCall);
+            let btnResetCalls = document.createElement('button');
+            btnResetCalls.id = 'btnResetCalls';
+            btnResetCalls.innerHTML = 'Reset N. Chiamate';
+            divSelect.append(divDisplay, inpRicCredit, btnRicCredit, btnStartCall, btnStopCall, btnResetCalls);
             // per ogni elemento nell'array assegno eventi 
-            if (ele == array[0]) {
+            if (ele == array[0]) { // comparazione con se stesso
                 btnRicCredit.addEventListener('click', () => {
                     Nokia.chargeCredit(+inpRicCredit.value);
                 });
                 btnStartCall.addEventListener('click', () => {
                     Nokia.startCall();
-                    btnStartCall.style.display = 'none';
-                    btnStopCall.style.display = 'initial';
                 });
                 btnStopCall.addEventListener('click', () => {
                     Nokia.stopCall();
-                    btnStopCall.style.display = 'none';
-                    btnStartCall.style.display = 'initial';
+                });
+                btnResetCalls.addEventListener('click', () => {
+                    Nokia.resetCalls();
                 });
             }
             if (ele == array[1]) {
@@ -71,13 +73,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 btnStartCall.addEventListener('click', () => {
                     Iphone.startCall();
-                    btnStartCall.style.display = 'none';
-                    btnStopCall.style.display = 'initial';
                 });
                 btnStopCall.addEventListener('click', () => {
                     Iphone.stopCall();
-                    btnStopCall.style.display = 'none';
-                    btnStartCall.style.display = 'initial';
+                });
+                btnResetCalls.addEventListener('click', () => {
+                    Iphone.resetCalls();
                 });
             }
             if (ele == array[2]) {
@@ -86,13 +87,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 btnStartCall.addEventListener('click', () => {
                     Samsung.startCall();
-                    btnStartCall.style.display = 'none';
-                    btnStopCall.style.display = 'initial';
                 });
                 btnStopCall.addEventListener('click', () => {
                     Samsung.stopCall();
-                    btnStopCall.style.display = 'none';
-                    btnStartCall.style.display = 'initial';
+                });
+                btnResetCalls.addEventListener('click', () => {
+                    Samsung.resetCalls();
                 });
             }
         });
@@ -147,9 +147,7 @@ class Cellular {
             if (this._timeSec >= 1) { // (60) ***TEST AREA***
                 this._credit -= 0.20;
                 if (this._credit <= 0.20) {
-                    // fermo chiamata, stampo la durata ed alert
                     this.stopCall();
-                    this._callsCount -= 1;
                     divDisplay.innerHTML = `${Print.NO_CREDIT}`;
                 }
             }
@@ -161,26 +159,39 @@ class Cellular {
         divDisplay.innerHTML = `Chiamata Iniziata...`;
         this.stopCall(); // stop all'intervallo precedente
         this._callInit = true;
+        this.showBtnStop();
         // la call parte solo se ci sono + di 0.40 (0.20 scatto 0.20 60sec call)
         if (this._credit >= 0.20) {
             this._credit -= 0.20; // scatto alla risposta
             // con fat arrow function il this mantiene lo scope della classe padre
             // senza si riferisce all'istanza che ha chiamato l'oggetto (startCall) 
             this._timer = setInterval(() => this.setCall(), 1000);
+            this._callsCount++;
         }
         else if (this._credit <= 0.20) {
-            // se dichiaro la const di un div dinamico fuori dalla classe il .innerHTML nella classe ritorna null     
             this.stopCall();
             divDisplay.innerHTML = `${Print.NO_CREDIT}`;
         }
     }
     stopCall() {
-        this._callsCount += 1;
+        this.showBtnStart();
         this._callInit = false;
         clearInterval(this._timer);
     }
     resetCalls() {
         this._callsCount = 0;
+    }
+    showBtnStart() {
+        let btnStartCall = document.querySelector('#btnStartCall');
+        let btnStopCall = document.querySelector('#btnStopCall');
+        btnStopCall.style.display = 'none';
+        btnStartCall.style.display = 'initial';
+    }
+    showBtnStop() {
+        let btnStartCall = document.querySelector('#btnStartCall');
+        let btnStopCall = document.querySelector('#btnStopCall');
+        btnStopCall.style.display = 'initial';
+        btnStartCall.style.display = 'none';
     }
 }
 class Phone extends Cellular {
@@ -254,8 +265,8 @@ let Iphone = new Smartphone('Iphone 4s');
 let Samsung = new Smartphone('Samsung A50');
 var Print;
 (function (Print) {
-    Print["RIC_MIN_CREDIT"] = "Devi ricaricare un minimo di 5$";
-    Print["RIC_MIN_DATA"] = "Minimo 5$ per ricaricare Data <br> (5$ -> 500MB - 10$ -> 1GB)";
+    Print["RIC_MIN_CREDIT"] = "Ricarica minima di 5$";
+    Print["RIC_MIN_DATA"] = "Ricarica Data minima (0.5) 500MB -->5$";
     Print["RIC_SUCCESS"] = "Hai caricato con successo ";
     Print["NO_CREDIT"] = "Credito esaurito. <br> Effettuare una ricarica.";
     Print["NO_DATA"] = "Data esaurito. <br> Effettuare una ricarica.";

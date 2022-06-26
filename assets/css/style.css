@@ -46,7 +46,7 @@ body {
     padding: 0;
     text-align: center;
 }
-#btnRicCredit, #btnStartCall, #btnStopCall {
+#btnRicCredit, #btnStartCall, #btnStopCall, #btnResetCalls {
     width: 250px;
     height: 30px;
     margin-top: 5px;
