@@ -17,13 +17,22 @@ document.addEventListener('DOMContentLoaded', () => {
     array.forEach(ele => {
         let divSelect = document.createElement('div');
         divSelect.id = 'divSelect';
-        divSelect.innerHTML = 'Seleziona Feature';
         let divCall = document.createElement('div');
         divCall.id = 'divCall';
         divCall.innerHTML = 'Call';
         let divInternet = document.createElement('div');
         divInternet.id = 'divInternet';
         divInternet.innerHTML = 'Internet';
+        if (ele == array[0]) {
+            DIV_PHONE_1.innerHTML = Nokia.infoModel();
+            divInternet.style.display = 'none';
+        }
+        else if (ele == array[1]) {
+            DIV_PHONE_2.innerHTML = Iphone.infoModel();
+        }
+        else if (ele == array[2]) {
+            DIV_PHONE_3.innerHTML = Samsung.infoModel();
+        }
         ele.append(divSelect);
         divSelect.append(divCall, divInternet);
         /* -------------------------- */
@@ -65,6 +74,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 btnResetCalls.addEventListener('click', () => {
                     Nokia.resetCalls();
                 });
+                DIV_PHONE_2.style.display = 'none';
+                DIV_PHONE_3.style.display = 'none';
             }
             if (ele == array[1]) {
                 btnRicCredit.addEventListener('click', () => {
@@ -79,6 +90,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 btnResetCalls.addEventListener('click', () => {
                     Iphone.resetCalls();
                 });
+                DIV_PHONE_1.style.display = 'none';
+                DIV_PHONE_3.style.display = 'none';
             }
             if (ele == array[2]) {
                 btnRicCredit.addEventListener('click', () => {
@@ -93,6 +106,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 btnResetCalls.addEventListener('click', () => {
                     Samsung.resetCalls();
                 });
+                DIV_PHONE_1.style.display = 'none';
+                DIV_PHONE_2.style.display = 'none';
             }
         });
         /* ----------------------------------------------- */
@@ -120,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
             let inpRicData = document.createElement('input');
             inpRicData.id = 'inpRicData';
             inpRicData.type = 'number';
-            inpRicData.placeholder = 'Inserisci data da ricaricare...';
+            inpRicData.placeholder = 'Inserisci Data da ricaricare...';
             let btnRicData = document.createElement('button');
             btnRicData.id = 'btnRicData';
             btnRicData.innerHTML = 'Ricarica Data';
@@ -152,6 +167,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 btnResetInt.addEventListener('click', () => {
                     Iphone.resetInternet();
                 });
+                DIV_PHONE_1.style.display = 'none';
+                DIV_PHONE_3.style.display = 'none';
             }
             if (ele == array[2]) {
                 btnRicCredit.addEventListener('click', () => {
@@ -169,6 +186,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 btnResetInt.addEventListener('click', () => {
                     Samsung.resetInternet();
                 });
+                DIV_PHONE_1.style.display = 'none';
+                DIV_PHONE_2.style.display = 'none';
             }
         });
     });
@@ -208,7 +227,7 @@ class Cellular {
         }
         else if (value >= 5) {
             this._credit = this._credit + value;
-            divDisplay.innerHTML = `${Print.RIC_SUCCESS} ${this.infoCredit()}`;
+            divDisplay.innerHTML = `${Print.RIC_SUCCESS} <br>${this.infoCredit()}`;
             inpRicCredit.value = '';
         }
     }

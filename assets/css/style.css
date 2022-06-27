@@ -14,37 +14,57 @@ body {
     line-height: 1.5em; 
 }
 .divPhone1, .divPhone2, .divPhone3 {
-    background-color: rgb(40, 40, 40);
+    background-color: white;
+    border: 10px solid rgb(40, 40, 40);
     width: 280px;
-    height: 500px;
-    border-radius: 10px;
+    height: 550px;
+    border-radius: 20px;
+    color: white;
+}
+.divPhone1 {
+    background-image: url(../img/nokia-img.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+.divPhone2 {
+    background-image: url(../img/iphone-img.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+.divPhone3 {
+    background-image: url(../img/samsung-img.png);
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 #divSelect {
-    color: white;
+    color: black;
     padding: 20px 0; 
     height: 93%;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center
+    align-items: center;
+    font-size: 1.2em;
+    line-height: 2em;
+    font-weight: 500;
+    color: black;
 }
 #divCall, #divInternet {
-    background-color: rgb(83, 58, 119);
+    border: 1px solid lightgrey;
+    background-color: rgba(255, 255, 255, 0.711);
     margin: 15px 5px;
     padding: 10px 0;
     width: 90%;
-    font-size: 1.3em;
-    font-weight: 500;
     border-radius: 5px;
 }
 
 #divDisplay, #divBrowser {
     color: black;
-    background-color: white;
+    background-color: rgb(255, 255, 255);
     width: 90%;
     height: 100%;
-    padding-top: 50px;
+    padding-top: 50px
 }
 
 #divBrowser {
@@ -55,16 +75,29 @@ body {
     margin-top: 50px;
 }
 #inpRicCredit, #inpRicData {
-    width: 90%;
-    height: 40px;
-    border: 0;
+    width: 250px;
+    height: 80px;
     padding: 0;
     text-align: center;
     align-items: center;
+    border: 1px solid lightgrey;
+    background-color: rgb(184, 184, 184);
+    color: white;
+    border-radius: 5px;
+    margin: 5px 0;
 }
 #btnRicCredit, #btnRicData, #btnStartCall, #btnStartInt, #btnStopCall, #btnStopInt, #btnResetCalls, #btnResetInt {
     width: 90%;
-    height: 40px;
+    height: 80px;
     font-weight: bold;
     align-items: center;
+    border: 1px solid lightgrey;
+    background-color: rgb(184, 184, 184);
+    color: white;
+    border-radius: 5px;
+    margin: 5px 0;
 }
+#btnResetInt {
+    margin-bottom: 10px;
+}
+
