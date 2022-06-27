@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // lo stesso div non puo' essere appeso 2 volte, c'e' bisogno di un foreach
     // per ogni elem. nell'array (per ogni telefono) crei gli elementi e li appendi
-    let array: any[] = [DIV_PHONE_1, DIV_PHONE_2, DIV_PHONE_3]; 
+    let array: HTMLDivElement[] = [DIV_PHONE_1, DIV_PHONE_2, DIV_PHONE_3]; 
         
     array.forEach(ele => { 
 
@@ -40,8 +40,6 @@ document.addEventListener('DOMContentLoaded', () => {
         divSelect.append(divCall, divInternet);
 
         /* -------------------------- */
-
-        /* let arrObject: Cellular[] = [Nokia, Iphone, Samsung]; */
 
         divCall.addEventListener('click', () => {
 
@@ -123,6 +121,99 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
         });   
+
+        /* ----------------------------------------------- */
+
+        divInternet.addEventListener('click', () => {
+
+            divSelect.innerHTML = '';
+            divCall.style.display = 'none';
+            divInternet.style.display = 'none';
+
+            let divBrowser = document.createElement('div') as HTMLDivElement;
+            divBrowser.id = 'divBrowser';
+            divBrowser.style.display = 'none';
+
+            let imgBrowser = document.createElement('img') as HTMLImageElement;
+            imgBrowser.id = 'imgBrowser';
+            imgBrowser.src = '../assets/img/google-img.png';
+            imgBrowser.style.width = '89%';
+            divBrowser.append(imgBrowser);
+
+            let divDisplay = document.createElement('div') as HTMLDivElement;
+            divDisplay.id = 'divDisplay';
+
+            let inpRicCredit = document.createElement('input') as HTMLInputElement;
+            inpRicCredit.id = 'inpRicCredit';
+            inpRicCredit.type = 'number';
+            inpRicCredit.placeholder = 'Inserisci importo da ricaricare...';
+            
+            let btnRicCredit = document.createElement('button') as HTMLButtonElement;
+            btnRicCredit.id = 'btnRicCredit';
+            btnRicCredit.innerHTML = 'Ricarica Importo';
+
+            let inpRicData = document.createElement('input') as HTMLInputElement;
+            inpRicData.id = 'inpRicData';
+            inpRicData.type = 'number';
+            inpRicData.placeholder = 'Inserisci data da ricaricare...';
+            
+            let btnRicData = document.createElement('button') as HTMLButtonElement;
+            btnRicData.id = 'btnRicData';
+            btnRicData.innerHTML = 'Ricarica Data';
+
+            let btnStartInt = document.createElement('button') as HTMLButtonElement;
+            btnStartInt.id = 'btnStartInt';
+            btnStartInt.innerHTML = 'Start Navigazione';
+
+            let btnStopInt = document.createElement('button') as HTMLButtonElement;
+            btnStopInt.id = 'btnStopInt';
+            btnStopInt.innerHTML = 'Stop Navigazione';
+            btnStopInt.style.display = 'none';
+
+            let btnResetInt = document.createElement('button') as HTMLButtonElement;
+            btnResetInt.id = 'btnResetInt';
+            btnResetInt.innerHTML = 'Reset N. Navigazioni';
+
+            divSelect.append(divBrowser, divDisplay, inpRicCredit, btnRicCredit, inpRicData, btnRicData, btnStartInt, btnStopInt, btnResetInt);
+
+            /* ----------------------------------------------- */
+
+            if (ele == array[1]) {
+                btnRicCredit.addEventListener('click', () => {
+                    Iphone.chargeCredit(+inpRicCredit.value);
+                });
+                btnRicData.addEventListener('click', () => { 
+                    Iphone.chargeData(+inpRicData.value); 
+                });
+                btnStartInt.addEventListener('click', () => {
+                    Iphone.startInternet();     
+                });
+                btnStopInt.addEventListener('click', () => {
+                    Iphone.stopInternet();     
+                });
+                btnResetInt.addEventListener('click', () => {
+                    Iphone.resetInternet();     
+                });
+            }
+
+            if (ele == array[2]) {
+                btnRicCredit.addEventListener('click', () => {
+                    Samsung.chargeCredit(+inpRicCredit.value);
+                });
+                btnRicData.addEventListener('click', () => { 
+                    Samsung.chargeData(+inpRicData.value); 
+                });
+                btnStartInt.addEventListener('click', () => {
+                    Samsung.startInternet();     
+                });
+                btnStopInt.addEventListener('click', () => {
+                    Samsung.stopInternet();     
+                });
+                btnResetInt.addEventListener('click', () => {
+                    Samsung.resetInternet();     
+                });
+            }
+        });   
     });
 });
 
@@ -164,12 +255,12 @@ abstract class Cellular {
         let inpRicCredit = document.querySelector('#inpRicCredit') as HTMLInputElement;
 
         if(value <= 4) {
-            divDisplay.innerHTML = `${Print.RIC_MIN_CREDIT}`;
+            divDisplay.innerHTML = `${Print.RIC_MIN_CREDIT} <br> ${this.infoCredit()}`;
             inpRicCredit.value = '';
 
         } else if (value >= 5) { 
-            divDisplay.innerHTML = `${Print.RIC_SUCCESS} ${value}$!`;
             this._credit = this._credit + value; 
+            divDisplay.innerHTML = `${Print.RIC_SUCCESS} ${this.infoCredit()}`;
             inpRicCredit.value = '';
         }
     }
@@ -182,9 +273,14 @@ abstract class Cellular {
             this._timeSec++;
             divDisplay.innerHTML = `${this.infoCall()} ${this.infoCredit()} <br> ${this.infoCalls()}`;
 
-            if(this._timeSec >= 1) {  // (60) ***TEST AREA***
+            if(this._timeSec >= 59) { // (59) ***TEST AREA***
+                this._timeSec = -1;   // fa 59, 0, 1..
+                this._timeMin++;
                 this._credit -= 0.20;
-
+                if(this._timeMin >=59) {
+                    this._timeMin = -1;
+                    this._timeHrs++;
+                }
                 if(this._credit <= 0.20) {
                     this.stopCall();
                     divDisplay.innerHTML = `${Print.NO_CREDIT}`;
@@ -197,14 +293,14 @@ abstract class Cellular {
     startCall(): void { 
         let divDisplay = document.querySelector('#divDisplay') as HTMLDivElement;
         divDisplay.innerHTML = `Chiamata Iniziata...`;
-
+        
         this.stopCall();  // stop all'intervallo precedente
         this._callInit = true;
         this.showBtnStop();
 
-        // la call parte solo se ci sono + di 0.40 (0.20 scatto 0.20 60sec call)
+        // la call parte solo se ci sono + di 0.20
         if(this._credit >= 0.20) { 
-            this._credit -= 0.20;  // scatto alla risposta
+            this._credit -= 0.40;  // scatto alla risposta (0.40)
             // con fat arrow function il this mantiene lo scope della classe padre
             // senza si riferisce all'istanza che ha chiamato l'oggetto (startCall) 
             this._timer = setInterval( () => this.setCall(), 1000 ) 
@@ -219,6 +315,9 @@ abstract class Cellular {
         this.showBtnStart();
         this._callInit = false;
         clearInterval(this._timer);
+        this._timeHrs = 0;
+        this._timeMin = 0;
+        this._timeSec = 0;
     }
     
     resetCalls(): void {
@@ -262,55 +361,82 @@ class Smartphone extends Cellular {
         return `Data Residuo: ${this._data.toFixed(3).slice(0,1)}GB ${this._data.toFixed(3).slice(2,5)}MB`;
     }
     infoInternet(): string {
-        return `Numero navigazioni effettuate: ${this._internetCount}`
+        return `<br> N. navigazioni: ${this._internetCount}`
     }
 
     // Metodo per caricare data (GB) disponibili:
     chargeData(value: number): void { 
         let divDisplay = document.querySelector('#divDisplay') as HTMLDivElement;
-        if(this._credit <= 4) {         // (4) ***TEST AREA***
-            divDisplay.innerHTML = `${Print.RIC_MIN_DATA}`;
-        } else if (this._credit >= 5) { // (5) ***TEST AREA***
-            // il valore dell'input equivale ai GB da agg.
-            this._data += value;        
-            // il credito che scalo e' il valore input*10
-            this._credit -= value*10; // (10) ***TEST AREA***
-            divDisplay.innerHTML = `${Print.RIC_SUCCESS} ${value.toFixed(3).slice(0,1)}GB ${value.toFixed(3).slice(2,5)}MB!`;
+        let inpRicData = document.querySelector('#inpRicData') as HTMLInputElement;
+
+        if(this._credit <= 4) {     
+            divDisplay.innerHTML = `${this.infoCredit()} <br> ${Print.RIC_MIN_DATA}`;
+        }       
+        if(value >= this._credit/9.5) { // operazione fallita
+            divDisplay.innerHTML = `Operazione fallita <br> ${Print.RIC_MIN_DATA}<br>${this.infoCredit()}`;
+            inpRicData.value = '';
+        } else if(value <= this._credit/9.5) {
+            this._data += value;        // operazione con successo    
+            this._credit -= value*10; 
+            divDisplay.innerHTML = `${Print.RIC_SUCCESS} <br>Data disponibile: ${value.toFixed(3).slice(0,1)}GB ${value.toFixed(3).slice(2,5)}MB!`;
+            inpRicData.value = '';
         }
     }
 
     // Metodo per gestire logica intervallo internet:
     setInternet(): void {
         let divDisplay = document.querySelector('#divDisplay') as HTMLDivElement;
+        let divBrowser = document.querySelector('#divBrowser') as HTMLDivElement;
         if (this._internetInit === true) {
-            // se il data e' 1MB data esaurito, stop Internet e stampa
+            // se il data e' inferiore a 1MB, stop Internet 
             if(this._data <= 0.001) {
-                /* alert(`Connessione in corso....`); */
                 this.stopInternet();
-                this._internetCount -= 1;
-                divDisplay.innerHTML = `${this.infoData()} ${Print.NO_DATA}`;
+                divDisplay.innerHTML = `${Print.NO_DATA} <br> ${this.infoData()}`;
             } else if (this._data >= 0.001) { // finche data e' >= 1MB scala il data
                 this._data -= 0.001;          // consumo al sec 0.001 (1MB)
-                divDisplay.innerHTML = `${this.infoData()}`; // qui stampero' a video
+                divDisplay.innerHTML = `${this.infoData()} ${this.infoInternet()}`; // qui stampero' a video
+                divDisplay.style.paddingTop = '15px';
+                divDisplay.style.paddingBottom = '15px';
+                divBrowser.style.display = 'initial';
             }
         }
     }
 
     // Metodo per inizializzare intervallo internet:
     startInternet(): void {
+        let divDisplay = document.querySelector('#divDisplay') as HTMLDivElement;
+        divDisplay.innerHTML = `Navigazione Iniziata...`;
+
         this.stopInternet();
         this._internetInit = true;
+        this.showBtnStop2();
+        this._internetCount++;
         this._space = setInterval( () => this.setInternet(), 1000 );
     }
 
     stopInternet(): void {
-        this._internetCount += 1;
+        let divBrowser = document.querySelector('#divBrowser') as HTMLDivElement;
+        divBrowser.style.display = 'none';
+        this.showBtnStart2();
         this._internetInit = false;
         clearInterval(this._space);
     }
 
     resetInternet(): void {
         this._internetCount = 0;
+    }
+
+    showBtnStart2(): void {
+        let btnStartInt = document.querySelector('#btnStartInt') as HTMLButtonElement;
+        let btnStopInt = document.querySelector('#btnStopInt') as HTMLButtonElement;
+        btnStopInt.style.display = 'none';
+        btnStartInt.style.display = 'initial';
+    }
+    showBtnStop2(): void {
+        let btnStartInt = document.querySelector('#btnStartInt') as HTMLButtonElement;
+        let btnStopInt = document.querySelector('#btnStopInt') as HTMLButtonElement;
+        btnStopInt.style.display = 'initial';
+        btnStartInt.style.display = 'none';
     }
 }
 
@@ -320,8 +446,8 @@ let Samsung = new Smartphone ('Samsung A50');
 
 enum Print {
     RIC_MIN_CREDIT = `Ricarica minima di 5$`,
-    RIC_MIN_DATA = `Ricarica Data minima (0.5) 500MB -->5$`,
-    RIC_SUCCESS = 'Hai caricato con successo ',
+    RIC_MIN_DATA = `Ricarica min 500MB per Navigare <br>Digita 0.5 per 500MB (Costo 5$) <br> Digita 1 per 1GB (Costo 10$)`,
+    RIC_SUCCESS = 'Ricarica avvenuta con successo!',
     NO_CREDIT = 'Credito esaurito. <br> Effettuare una ricarica.',
     NO_DATA = 'Data esaurito. <br> Effettuare una ricarica.'
 }
