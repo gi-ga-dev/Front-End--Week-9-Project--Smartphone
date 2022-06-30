@@ -107,7 +107,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 abstract class Cellular {
 
-    /* ---- Propr. definite nel constructor (Dati Fissi) */
     protected _model: string;              // modello cellulare
     protected _credit: number = 0;         // credito totale disponibile
     protected _timeHrs: number = 0;        // tempi di chiamata corrente ore (intervallo)
@@ -167,8 +166,8 @@ abstract class Cellular {
             divDisplay.style.backgroundSize = '100%';
             divDisplay.style.backgroundRepeat = 'no-repeat';
             divDisplay.style.backgroundPosition = 'center';
-            if(this._timeSec >= 59) { // (59) ***TEST AREA***
-                this._timeSec = -1;   // fa 59, 0, 1..
+            if(this._timeSec >= 59) {
+                this._timeSec = -1;   // (59, 0, 1..)
                 this._timeMin++;
                 this._credit -= 0.20;
                 if(this._timeMin >=59) {
@@ -232,7 +231,6 @@ abstract class Cellular {
 
 class Smartphone extends Cellular {
 
-    /* ---- Propr. non definite nel constructor (Dati Mutevoli) */
     protected _data: number = 0;              // Data disponibile (GB/MB)
     protected _space: number = 0;             // prop. da attribuire all'intervallo internet
     protected _internetInit: boolean = false; // inizializzatore timer internet

@@ -134,8 +134,8 @@ class Cellular {
             divDisplay.style.backgroundSize = '100%';
             divDisplay.style.backgroundRepeat = 'no-repeat';
             divDisplay.style.backgroundPosition = 'center';
-            if (this._timeSec >= 59) { // (59) ***TEST AREA***
-                this._timeSec = -1; // fa 59, 0, 1..
+            if (this._timeSec >= 59) {
+                this._timeSec = -1; // (59, 0, 1..)
                 this._timeMin++;
                 this._credit -= 0.20;
                 if (this._timeMin >= 59) {
@@ -196,7 +196,6 @@ Cellular._id = -1;
 class Smartphone extends Cellular {
     constructor(model) {
         super(model);
-        /* ---- Propr. non definite nel constructor (Dati Mutevoli) */
         this._data = 0; // Data disponibile (GB/MB)
         this._space = 0; // prop. da attribuire all'intervallo internet
         this._internetInit = false; // inizializzatore timer internet
