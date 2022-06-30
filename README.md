@@ -20,19 +20,16 @@ At DOMContentLoaded with a foreach array method I dinamically created elements w
 
 To avoid code repetition I assigned an id counter (_cellId) to Cellular class that will increment for each object created, so inside a class method, when I need to select and write inside multiple divs/buttons with the same class name, the QuerySelectorAll with [this._cellId] will target each specific element.
 
-In the input field you can type to charge credit to make a call (a simple timer interval), or use the credit to charge Data (typing 0.5 at the cost of 5 dollars will charge 500MB, typing 1 at the cost of 10 dollars will charge 1GB). Internet navigation is another timer interval with 1MB decrement each second. 
+In the input field you can type to charge credit to make a call (a simple timer interval) with a 0.20cent credit charge every 60sec, or use the credit to charge Data (typing 0.5 at the cost of 5 dollars will charge 500MB, typing 1 at the cost of 10 dollars will charge 1GB etc.). 
+Internet navigation is another timer interval with 1MB decrement each second. 
 
 Features:
-- Call (0.20cent every 60sec)
-- Internet (1MB usage ever sec)
+- Call | Internet
 
 Methods:
-- Charge Credit
-- Start/Stop Call
-- Reset Calls Counter
-- Charge Data
-- Start/Stop Internet
-- Reset Internet Counter
+- Charge Credit | Data
+- Start/Stop Call | Internet
+- Reset Calls | Internet Counter
 
 </p>
 
