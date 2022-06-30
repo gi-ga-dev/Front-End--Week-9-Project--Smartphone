@@ -1,6 +1,6 @@
 
 <p><h2 align="center" dir="auto"><b>Epicode School - Week 9 Project</b></h2></p>
-<p align="center" dir="auto">Track: </p>
+<p align="center" dir="auto">Track: Create 2 Smartphone samples using classes</p>
 
 <p align="center" dir="auto"><b>Technologies Used:</b></p>
 <p align="center" dir="auto"> 
@@ -15,3 +15,5 @@
 <p align="center" dir="auto"> <b>Project Introduction:</b> <br><br>
 
 </p>
+
+![week-9](https://user-images.githubusercontent.com/77717069/176638647-0bf41732-af41-4c21-83cb-3404f847484e.gif)
