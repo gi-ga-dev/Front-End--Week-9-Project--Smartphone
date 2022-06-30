@@ -1,195 +1,85 @@
 "use strict";
-// Div non dinamico (HTML) si puo' chiamare dai metodi di classe senza riscrivere il query selector
 const CONT = document.querySelector('.container');
 document.addEventListener('DOMContentLoaded', () => {
-    /* ========= Div Cellular 1 ========= */
-    const DIV_PHONE_1 = document.createElement('div');
-    DIV_PHONE_1.className = 'divPhone1';
-    const DIV_PHONE_2 = document.createElement('div');
-    DIV_PHONE_2.className = 'divPhone2';
-    const DIV_PHONE_3 = document.createElement('div');
-    DIV_PHONE_3.className = 'divPhone3';
-    /* ---------------------------------------- */
-    CONT === null || CONT === void 0 ? void 0 : CONT.append(DIV_PHONE_1, DIV_PHONE_2, DIV_PHONE_3);
-    // lo stesso div non puo' essere appeso 2 volte, c'e' bisogno di un foreach
-    // per ogni elem. nell'array (per ogni telefono) crei gli elementi e li appendi
-    let array = [DIV_PHONE_1, DIV_PHONE_2, DIV_PHONE_3];
-    array.forEach(ele => {
-        let divSelect = document.createElement('div');
+    let arrPhones = [Iphone, Samsung];
+    arrPhones.forEach(ele => {
+        const DIV_PHONE = document.createElement('div');
+        DIV_PHONE.className = 'divPhone';
+        let divCamera = document.createElement('div');
+        divCamera.id = 'divCamera';
+        divCamera.innerHTML = '( O )';
+        let divStandby = document.createElement('div');
+        divStandby.id = 'divStandby';
+        divStandby.style.display = 'initial';
+        let btnShow = document.createElement('button');
+        btnShow.id = 'btnShow';
+        btnShow.innerHTML = 'Sblocca Telefono';
+        btnShow.addEventListener('click', function () {
+            divStandby.style.display = 'none';
+            divSelect.style.display = 'initial';
+        });
+        let divSelect = document.createElement('div'); // schermata selezione
         divSelect.id = 'divSelect';
-        let divCall = document.createElement('div');
-        divCall.id = 'divCall';
-        divCall.innerHTML = 'Call';
-        let divInternet = document.createElement('div');
-        divInternet.id = 'divInternet';
-        divInternet.innerHTML = 'Internet';
-        if (ele == array[0]) {
-            DIV_PHONE_1.innerHTML = Nokia.infoModel();
-            divInternet.style.display = 'none';
-        }
-        else if (ele == array[1]) {
-            DIV_PHONE_2.innerHTML = Iphone.infoModel();
-        }
-        else if (ele == array[2]) {
-            DIV_PHONE_3.innerHTML = Samsung.infoModel();
-        }
-        ele.append(divSelect);
-        divSelect.append(divCall, divInternet);
-        /* -------------------------- */
-        divCall.addEventListener('click', () => {
-            divSelect.innerHTML = '';
-            divCall.style.display = 'none';
-            divInternet.style.display = 'none';
-            let divDisplay = document.createElement('div');
-            divDisplay.id = 'divDisplay';
-            let inpRicCredit = document.createElement('input');
-            inpRicCredit.id = 'inpRicCredit';
-            inpRicCredit.type = 'number';
-            inpRicCredit.placeholder = 'Inserisci importo da ricaricare...';
-            let btnRicCredit = document.createElement('button');
-            btnRicCredit.id = 'btnRicCredit';
-            btnRicCredit.innerHTML = 'Ricarica Importo';
-            let btnStartCall = document.createElement('button');
-            btnStartCall.id = 'btnStartCall';
-            btnStartCall.innerHTML = 'Start Chiamata';
-            let btnStopCall = document.createElement('button');
-            btnStopCall.id = 'btnStopCall';
-            btnStopCall.innerHTML = 'Stop Chiamata';
-            btnStopCall.style.display = 'none';
-            let btnResetCalls = document.createElement('button');
-            btnResetCalls.id = 'btnResetCalls';
-            btnResetCalls.innerHTML = 'Reset N. Chiamate';
-            divSelect.append(divDisplay, inpRicCredit, btnRicCredit, btnStartCall, btnStopCall, btnResetCalls);
-            // per ogni elemento nell'array assegno eventi 
-            if (ele == array[0]) { // comparazione con se stesso
-                btnRicCredit.addEventListener('click', () => {
-                    Nokia.chargeCredit(+inpRicCredit.value);
-                });
-                btnStartCall.addEventListener('click', () => {
-                    Nokia.startCall();
-                });
-                btnStopCall.addEventListener('click', () => {
-                    Nokia.stopCall();
-                });
-                btnResetCalls.addEventListener('click', () => {
-                    Nokia.resetCalls();
-                });
-                DIV_PHONE_2.style.display = 'none';
-                DIV_PHONE_3.style.display = 'none';
-            }
-            if (ele == array[1]) {
-                btnRicCredit.addEventListener('click', () => {
-                    Iphone.chargeCredit(+inpRicCredit.value);
-                });
-                btnStartCall.addEventListener('click', () => {
-                    Iphone.startCall();
-                });
-                btnStopCall.addEventListener('click', () => {
-                    Iphone.stopCall();
-                });
-                btnResetCalls.addEventListener('click', () => {
-                    Iphone.resetCalls();
-                });
-                DIV_PHONE_1.style.display = 'none';
-                DIV_PHONE_3.style.display = 'none';
-            }
-            if (ele == array[2]) {
-                btnRicCredit.addEventListener('click', () => {
-                    Samsung.chargeCredit(+inpRicCredit.value);
-                });
-                btnStartCall.addEventListener('click', () => {
-                    Samsung.startCall();
-                });
-                btnStopCall.addEventListener('click', () => {
-                    Samsung.stopCall();
-                });
-                btnResetCalls.addEventListener('click', () => {
-                    Samsung.resetCalls();
-                });
-                DIV_PHONE_1.style.display = 'none';
-                DIV_PHONE_2.style.display = 'none';
-            }
+        divSelect.style.display = 'none';
+        // ----------------------------------------------
+        divSelect.innerHTML = '';
+        let divDisplay = document.createElement('div');
+        divDisplay.id = 'divDisplay';
+        let inpRicCredit = document.createElement('input');
+        inpRicCredit.id = 'inpRicCredit';
+        inpRicCredit.type = 'number';
+        inpRicCredit.placeholder = 'Inserisci Credito/Data da ricaricare...';
+        let btnRicCredit = document.createElement('button');
+        btnRicCredit.id = 'btnRicCredit';
+        btnRicCredit.innerHTML = 'Ricarica Credito';
+        btnRicCredit.addEventListener('click', () => { ele.chargeCredit(+inpRicCredit.value); });
+        let btnStartCall = document.createElement('button');
+        btnStartCall.id = 'btnStartCall';
+        btnStartCall.innerHTML = 'Start Chiamata';
+        btnStartCall.addEventListener('click', () => {
+            ele.startCall();
+            ele.stopInternet();
+            divDisplay.style.background = 'rgba(255, 255, 255, 0.3)';
         });
-        /* ----------------------------------------------- */
-        divInternet.addEventListener('click', () => {
-            divSelect.innerHTML = '';
-            divCall.style.display = 'none';
-            divInternet.style.display = 'none';
-            let divBrowser = document.createElement('div');
-            divBrowser.id = 'divBrowser';
-            divBrowser.style.display = 'none';
-            let imgBrowser = document.createElement('img');
-            imgBrowser.id = 'imgBrowser';
-            imgBrowser.src = '../assets/img/google-img.png';
-            imgBrowser.style.width = '89%';
-            divBrowser.append(imgBrowser);
-            let divDisplay = document.createElement('div');
-            divDisplay.id = 'divDisplay';
-            let inpRicCredit = document.createElement('input');
-            inpRicCredit.id = 'inpRicCredit';
-            inpRicCredit.type = 'number';
-            inpRicCredit.placeholder = 'Inserisci importo da ricaricare...';
-            let btnRicCredit = document.createElement('button');
-            btnRicCredit.id = 'btnRicCredit';
-            btnRicCredit.innerHTML = 'Ricarica Importo';
-            let inpRicData = document.createElement('input');
-            inpRicData.id = 'inpRicData';
-            inpRicData.type = 'number';
-            inpRicData.placeholder = 'Inserisci Data da ricaricare...';
-            let btnRicData = document.createElement('button');
-            btnRicData.id = 'btnRicData';
-            btnRicData.innerHTML = 'Ricarica Data';
-            let btnStartInt = document.createElement('button');
-            btnStartInt.id = 'btnStartInt';
-            btnStartInt.innerHTML = 'Start Navigazione';
-            let btnStopInt = document.createElement('button');
-            btnStopInt.id = 'btnStopInt';
-            btnStopInt.innerHTML = 'Stop Navigazione';
-            btnStopInt.style.display = 'none';
-            let btnResetInt = document.createElement('button');
-            btnResetInt.id = 'btnResetInt';
-            btnResetInt.innerHTML = 'Reset N. Navigazioni';
-            divSelect.append(divBrowser, divDisplay, inpRicCredit, btnRicCredit, inpRicData, btnRicData, btnStartInt, btnStopInt, btnResetInt);
-            /* ----------------------------------------------- */
-            if (ele == array[1]) {
-                btnRicCredit.addEventListener('click', () => {
-                    Iphone.chargeCredit(+inpRicCredit.value);
-                });
-                btnRicData.addEventListener('click', () => {
-                    Iphone.chargeData(+inpRicData.value);
-                });
-                btnStartInt.addEventListener('click', () => {
-                    Iphone.startInternet();
-                });
-                btnStopInt.addEventListener('click', () => {
-                    Iphone.stopInternet();
-                });
-                btnResetInt.addEventListener('click', () => {
-                    Iphone.resetInternet();
-                });
-                DIV_PHONE_1.style.display = 'none';
-                DIV_PHONE_3.style.display = 'none';
-            }
-            if (ele == array[2]) {
-                btnRicCredit.addEventListener('click', () => {
-                    Samsung.chargeCredit(+inpRicCredit.value);
-                });
-                btnRicData.addEventListener('click', () => {
-                    Samsung.chargeData(+inpRicData.value);
-                });
-                btnStartInt.addEventListener('click', () => {
-                    Samsung.startInternet();
-                });
-                btnStopInt.addEventListener('click', () => {
-                    Samsung.stopInternet();
-                });
-                btnResetInt.addEventListener('click', () => {
-                    Samsung.resetInternet();
-                });
-                DIV_PHONE_1.style.display = 'none';
-                DIV_PHONE_2.style.display = 'none';
-            }
+        let btnStopCall = document.createElement('button');
+        btnStopCall.id = 'btnStopCall';
+        btnStopCall.innerHTML = 'Stop Chiamata';
+        btnStopCall.style.display = 'none';
+        btnStopCall.addEventListener('click', () => { ele.stopCall(); });
+        let btnResetCalls = document.createElement('button');
+        btnResetCalls.id = 'btnResetCalls';
+        btnResetCalls.innerHTML = 'Reset N. Chiamate';
+        btnResetCalls.addEventListener('click', () => { ele.resetCalls(); });
+        // ----------------------------------------------------------------------
+        let btnRicData = document.createElement('button');
+        btnRicData.id = 'btnRicData';
+        btnRicData.innerHTML = 'Ricarica Data';
+        btnRicData.addEventListener('click', () => { ele.chargeData(+inpRicCredit.value); });
+        let btnStartInt = document.createElement('button');
+        btnStartInt.id = 'btnStartInt';
+        btnStartInt.innerHTML = 'Start Navigazione';
+        btnStartInt.addEventListener('click', () => {
+            ele.startInternet();
+            ele.stopCall();
+            divDisplay.style.background = 'rgba(255, 255, 255, 0.3)';
         });
+        let btnStopInt = document.createElement('button');
+        btnStopInt.id = 'btnStopInt';
+        btnStopInt.innerHTML = 'Stop Navigazione';
+        btnStopInt.style.display = 'none';
+        btnStopInt.addEventListener('click', () => {
+            ele.stopInternet();
+            divDisplay.style.background = 'rgba(255, 255, 255, 0.3)';
+        });
+        let btnResetInt = document.createElement('button');
+        btnResetInt.id = 'btnResetInt';
+        btnResetInt.innerHTML = 'Reset N. Navigazioni';
+        btnResetInt.addEventListener('click', () => { ele.resetInternet(); });
+        // ----------------------------------------------------------------------
+        CONT === null || CONT === void 0 ? void 0 : CONT.append(DIV_PHONE);
+        DIV_PHONE.append(divCamera, divStandby, divSelect);
+        divStandby.append(btnShow);
+        divSelect.append(divDisplay, inpRicCredit, btnRicCredit, btnRicData, btnStartCall, btnStopCall, btnStartInt, btnStopInt, btnResetCalls, btnResetInt);
     });
 });
 class Cellular {
@@ -202,6 +92,8 @@ class Cellular {
         this._callInit = false; // inizializzatore timer chiamata
         this._callsCount = 0; // contatore n. chiamate effettuate
         this._model = model;
+        Cellular._id++;
+        this._cellId = Cellular._id;
     }
     // utilizzare i get solo per definire propr. fisse che avranno tutti gli oggetti creati
     get model() { return this._model; }
@@ -219,8 +111,9 @@ class Cellular {
     }
     // Metodo per caricare saldo (dollari) disponibile (minimo 5$):
     chargeCredit(value) {
-        let divDisplay = document.querySelector('#divDisplay');
-        let inpRicCredit = document.querySelector('#inpRicCredit');
+        // con QuerySelectorAll non puoi passare 1 solo nodo, ma con un contatore nella classe padre che incrementa per ogni oggetto, considerera' piu' nodi uguali
+        let divDisplay = document.querySelectorAll('#divDisplay')[this._cellId];
+        let inpRicCredit = document.querySelectorAll('#inpRicCredit')[this._cellId];
         if (value <= 4) {
             divDisplay.innerHTML = `${Print.RIC_MIN_CREDIT} <br> ${this.infoCredit()}`;
             inpRicCredit.value = '';
@@ -233,11 +126,14 @@ class Cellular {
     }
     // Metodo per gestire logica intervallo chiamata:
     setCall() {
-        let divDisplay = document.querySelector('#divDisplay');
-        // il timer incrementa, i soldi decrementano
+        let divDisplay = document.querySelectorAll('#divDisplay')[this._cellId];
         if (this._callInit === true) {
             this._timeSec++;
             divDisplay.innerHTML = `${this.infoCall()} ${this.infoCredit()} <br> ${this.infoCalls()}`;
+            divDisplay.style.background = 'url(../assets/img/call-img.png)';
+            divDisplay.style.backgroundSize = '100%';
+            divDisplay.style.backgroundRepeat = 'no-repeat';
+            divDisplay.style.backgroundPosition = 'center';
             if (this._timeSec >= 59) { // (59) ***TEST AREA***
                 this._timeSec = -1; // fa 59, 0, 1..
                 this._timeMin++;
@@ -255,12 +151,11 @@ class Cellular {
     }
     // Metodo per inizializzare intervallo chiamata:
     startCall() {
-        let divDisplay = document.querySelector('#divDisplay');
-        divDisplay.innerHTML = `Chiamata Iniziata...`;
+        let divDisplay = document.querySelectorAll('#divDisplay')[this._cellId];
+        divDisplay.innerHTML = `<br><br>Chiamata Iniziata...`;
         this.stopCall(); // stop all'intervallo precedente
         this._callInit = true;
         this.showBtnStop();
-        // la call parte solo se ci sono + di 0.20
         if (this._credit >= 0.20) {
             this._credit -= 0.40; // scatto alla risposta (0.40)
             // con fat arrow function il this mantiene lo scope della classe padre
@@ -270,7 +165,7 @@ class Cellular {
         }
         else if (this._credit <= 0.20) {
             this.stopCall();
-            divDisplay.innerHTML = `${Print.NO_CREDIT}`;
+            divDisplay.innerHTML = `${Print.NO_CREDIT}${this.infoCredit()}`;
         }
     }
     stopCall() {
@@ -285,23 +180,19 @@ class Cellular {
         this._callsCount = 0;
     }
     showBtnStart() {
-        let btnStartCall = document.querySelector('#btnStartCall');
-        let btnStopCall = document.querySelector('#btnStopCall');
+        let btnStopCall = document.querySelectorAll('#btnStopCall')[this._cellId];
+        let btnStartCall = document.querySelectorAll('#btnStartCall')[this._cellId];
         btnStopCall.style.display = 'none';
         btnStartCall.style.display = 'initial';
     }
     showBtnStop() {
-        let btnStartCall = document.querySelector('#btnStartCall');
-        let btnStopCall = document.querySelector('#btnStopCall');
+        let btnStopCall = document.querySelectorAll('#btnStopCall')[this._cellId];
+        let btnStartCall = document.querySelectorAll('#btnStartCall')[this._cellId];
         btnStopCall.style.display = 'initial';
         btnStartCall.style.display = 'none';
     }
 }
-class Phone extends Cellular {
-    constructor(model) {
-        super(model);
-    }
-}
+Cellular._id = -1;
 class Smartphone extends Cellular {
     constructor(model) {
         super(model);
@@ -310,6 +201,7 @@ class Smartphone extends Cellular {
         this._space = 0; // prop. da attribuire all'intervallo internet
         this._internetInit = false; // inizializzatore timer internet
         this._internetCount = 0; // n. navigazioni internet
+        this._id = Cellular._id;
     }
     infoData() {
         return `Data Residuo: ${this._data.toFixed(3).slice(0, 1)}GB ${this._data.toFixed(3).slice(2, 5)}MB`;
@@ -319,26 +211,25 @@ class Smartphone extends Cellular {
     }
     // Metodo per caricare data (GB) disponibili:
     chargeData(value) {
-        let divDisplay = document.querySelector('#divDisplay');
-        let inpRicData = document.querySelector('#inpRicData');
-        if (this._credit <= 4) {
-            divDisplay.innerHTML = `${this.infoCredit()} <br> ${Print.RIC_MIN_DATA}`;
-        }
+        let divDisplay = document.querySelectorAll('#divDisplay')[this._cellId];
+        let inpRicCredit = document.querySelectorAll('#inpRicCredit')[this._cellId];
         if (value >= this._credit / 9.5) { // operazione fallita
-            divDisplay.innerHTML = `Operazione fallita <br> ${Print.RIC_MIN_DATA}<br>${this.infoCredit()}`;
-            inpRicData.value = '';
+            divDisplay.innerHTML = `${Print.RIC_MIN_DATA}`;
+            inpRicCredit.value = '';
         }
         else if (value <= this._credit / 9.5) {
             this._data += value; // operazione con successo    
             this._credit -= value * 10;
             divDisplay.innerHTML = `${Print.RIC_SUCCESS} <br>Data disponibile: ${value.toFixed(3).slice(0, 1)}GB ${value.toFixed(3).slice(2, 5)}MB!`;
-            inpRicData.value = '';
+            inpRicCredit.value = '';
+        }
+        if (this._credit >= 0.20 && this._data <= 0.5) {
+            divDisplay.innerHTML = `${Print.RIC_MIN_DATA}`;
         }
     }
     // Metodo per gestire logica intervallo internet:
     setInternet() {
-        let divDisplay = document.querySelector('#divDisplay');
-        let divBrowser = document.querySelector('#divBrowser');
+        let divDisplay = document.querySelectorAll('#divDisplay')[this._cellId];
         if (this._internetInit === true) {
             // se il data e' inferiore a 1MB, stop Internet 
             if (this._data <= 0.001) {
@@ -347,26 +238,24 @@ class Smartphone extends Cellular {
             }
             else if (this._data >= 0.001) { // finche data e' >= 1MB scala il data
                 this._data -= 0.001; // consumo al sec 0.001 (1MB)
-                divDisplay.innerHTML = `${this.infoData()} ${this.infoInternet()}`; // qui stampero' a video
-                divDisplay.style.paddingTop = '15px';
-                divDisplay.style.paddingBottom = '15px';
-                divBrowser.style.display = 'initial';
+                divDisplay.style.background = 'url(../assets/img/google-img.png)';
+                divDisplay.style.backgroundSize = '100%';
+                divDisplay.style.backgroundRepeat = 'no-repeat';
+                divDisplay.innerHTML = `<br><br><br>${this.infoData()} ${this.infoInternet()}`; // qui stampero' a video
             }
         }
     }
     // Metodo per inizializzare intervallo internet:
     startInternet() {
-        let divDisplay = document.querySelector('#divDisplay');
-        divDisplay.innerHTML = `Navigazione Iniziata...`;
+        let divDisplay = document.querySelectorAll('#divDisplay')[this._cellId];
         this.stopInternet();
         this._internetInit = true;
         this.showBtnStop2();
         this._internetCount++;
+        divDisplay.innerHTML = `<br><br>Navigazione Iniziata...`;
         this._space = setInterval(() => this.setInternet(), 1000);
     }
     stopInternet() {
-        let divBrowser = document.querySelector('#divBrowser');
-        divBrowser.style.display = 'none';
         this.showBtnStart2();
         this._internetInit = false;
         clearInterval(this._space);
@@ -375,25 +264,24 @@ class Smartphone extends Cellular {
         this._internetCount = 0;
     }
     showBtnStart2() {
-        let btnStartInt = document.querySelector('#btnStartInt');
-        let btnStopInt = document.querySelector('#btnStopInt');
+        let btnStartInt = document.querySelectorAll('#btnStartInt')[this._cellId];
+        let btnStopInt = document.querySelectorAll('#btnStopInt')[this._cellId];
         btnStopInt.style.display = 'none';
         btnStartInt.style.display = 'initial';
     }
     showBtnStop2() {
-        let btnStartInt = document.querySelector('#btnStartInt');
-        let btnStopInt = document.querySelector('#btnStopInt');
+        let btnStartInt = document.querySelectorAll('#btnStartInt')[this._cellId];
+        let btnStopInt = document.querySelectorAll('#btnStopInt')[this._cellId];
         btnStopInt.style.display = 'initial';
         btnStartInt.style.display = 'none';
     }
 }
-let Nokia = new Phone('Nokia 3330');
-let Iphone = new Smartphone('Iphone 4s');
-let Samsung = new Smartphone('Samsung A50');
+let Iphone = new Smartphone('Iphone');
+let Samsung = new Smartphone('Samsung');
 var Print;
 (function (Print) {
-    Print["RIC_MIN_CREDIT"] = "Ricarica minima di 5$";
-    Print["RIC_MIN_DATA"] = "Ricarica min 500MB per Navigare <br>Digita 0.5 per 500MB (Costo 5$) <br> Digita 1 per 1GB (Costo 10$)";
+    Print["RIC_MIN_CREDIT"] = "Operazione Fallita..<br>Ricarica minima di 5$";
+    Print["RIC_MIN_DATA"] = "Operazione Fallita..<br>Digita 0.5 per 500MB (Costo 5$) <br> Digita 1 per 1GB (Costo 10$)";
     Print["RIC_SUCCESS"] = "Ricarica avvenuta con successo!";
     Print["NO_CREDIT"] = "Credito esaurito. <br> Effettuare una ricarica.";
     Print["NO_DATA"] = "Data esaurito. <br> Effettuare una ricarica.";
