@@ -1,6 +1,6 @@
 
 <p><h2 align="center" dir="auto"><b>Epicode School - Week 9 Project</b></h2></p>
-<p align="center" dir="auto">Track: Create 2 Smartphone samples using classes that can be used at the same time.</p>
+<p align="center" dir="auto">Track: Using TypeScript classes Create 2 Smartphone samples that can be used at the same time.</p>
 
 <p align="center" dir="auto"><b>Technologies Used:</b></p>
 <p align="center" dir="auto"> 
