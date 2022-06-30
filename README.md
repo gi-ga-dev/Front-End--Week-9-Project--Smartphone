@@ -1,6 +1,6 @@
 
 <p><h2 align="center" dir="auto"><b>Epicode School - Week 9 Project</b></h2></p>
-<p align="center" dir="auto">Track: Create 2 Smartphone samples using classes</p>
+<p align="center" dir="auto">Track: Create 2 Smartphone samples using classes that can be used at the same time.</p>
 
 <p align="center" dir="auto"><b>Technologies Used:</b></p>
 <p align="center" dir="auto"> 
@@ -13,6 +13,26 @@
 </p>
 
 <p align="center" dir="auto"> <b>Project Introduction:</b> <br><br>
+
+I created an abstract class (Cellular) with methods and protected properties, in order to pass them to a subclass (Smartphone).
+
+At DOMContentLoaded with a foreach array method I dinamically created elements with class methods assigned to each object.
+
+To avoid code repetition I assigned an id counter (_cellId) to Cellular class that will increment for each object created, so inside a class method, when I need to select and write inside multiple divs/buttons with the same class name, the QuerySelectorAll with [this._cellId] will target each specific element.
+
+In the input field you can type to charge credit to make a call (a simple timer interval), or use the credit to charge Data (typing 0.5 at the cost of 5 dollars will charge 500MB, typing 1 at the cost of 10 dollars will charge 1GB). Internet navigation is another timer interval with 1MB decrement each second. 
+
+Features:
+- Call (0.20cent every 60sec)
+- Internet (1MB usage ever sec)
+
+Methods:
+- Charge Credit
+- Start/Stop Call
+- Reset Calls Counter
+- Charge Data
+- Start/Stop Internet
+- Reset Internet Counter
 
 </p>
 
