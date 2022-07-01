@@ -24,12 +24,12 @@ In the input field you can type to charge credit to make a call (a simple timer 
 Internet navigation is another timer interval with 1MB decrement each second. 
 
 Features:
-- Call | Internet
+- `Call` | `Internet`
 
 Methods:
-- Charge Credit | Data
-- Start/Stop Call | Internet
-- Reset Calls | Internet Counter
+- `Charge Credit` | `Data`
+- `Start/Stop Call` | `Internet`
+- `Reset Calls` | `Internet Counter`
 
 </p>
 
